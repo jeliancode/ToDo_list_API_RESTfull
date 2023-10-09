@@ -29,15 +29,23 @@ public class UserController {
     return ResponseEntity.ok(users);
   }
 
-  @PostMapping
+  @PostMapping("/createUser")
   public ResponseEntity createUser(@Valid @RequestBody User user, Errors errors) {
     if (errors.hasErrors()) {
       return ResponseEntity.badRequest().build();
     }
     return userService.save(user);
   }
+  @PostMapping("/editUser/{idUser}")
+  public ResponseEntity updateUser(@PathVariable("idUser") Long idUser, @Valid @RequestBody User updatedUser, Errors errors) {
+    if (errors.hasErrors()) {
+      return ResponseEntity.badRequest().build();
+    }
+    updatedUser.setIdUser(idUser);
+    return userService.save(updatedUser);
+  }
 
-  @DeleteMapping(path = "{idUser}")
+  @DeleteMapping("/deleteUser/{idUser}")
   public ResponseEntity<Object> deleteTask(@PathVariable("idUser") Long idUser) {
     return userService.delete(idUser);
   }

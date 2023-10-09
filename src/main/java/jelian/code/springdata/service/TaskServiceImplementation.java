@@ -28,7 +28,7 @@ public class TaskServiceImplementation implements TaskService {
   @Transactional
   public ResponseEntity<Object> save(Task task) {
     var searchResult = toDoListDao.findByTaskName(task.getTaskName());
-    logMap= new HashMap<>();
+    logMap = new HashMap<>();
 
     if (searchResult.isPresent() && task.getIdTask() == null) {
       logMap.put("ERROR", true);
@@ -39,7 +39,7 @@ public class TaskServiceImplementation implements TaskService {
       );
     }
 
-    if(task.getIdTask() != null){
+    if (task.getIdTask() != null) {
       logMap.put("MESSAGE", "UPDATED");
     }
 
