@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import jelian.code.springdata.dao.ToDoListDao;
 import jelian.code.springdata.domain.Task;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public class TaskServiceImplementation implements TaskService {
       logMap.put("MESSAGE", "THIS TASK NOT EXISTS");
       return new ResponseEntity<>(
           logMap,
-          HttpStatus.CONFLICT
+          HttpStatus.NOT_FOUND
       );
     }
     toDoListDao.deleteById(idTask);

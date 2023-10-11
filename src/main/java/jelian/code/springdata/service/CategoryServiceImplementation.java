@@ -2,8 +2,8 @@ package jelian.code.springdata.service;
 
 import java.util.HashMap;
 import java.util.List;
-import jelian.code.springdata.dao.UserDao;
-import jelian.code.springdata.domain.User;
+import jelian.code.springdata.dao.CategoryDao;
+import jelian.code.springdata.domain.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,39 +11,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserServiceImplementation implements UserService {
+public class CategoryServiceImplementation implements CategoryService {
 
   @Autowired
-  private UserDao userDao;
+  private CategoryDao categoryDao;
   private HashMap<String, Object> logMap;
 
   @Override
   @Transactional(readOnly = true)
-  public List<User> userList() {
-    return (List<User>) userDao.findAll();
+  public List<Category> categoryList() {
+    return (List<Category>) categoryDao.findAll();
   }
 
   @Override
   @Transactional
-  public ResponseEntity<Object> save(User user) {
-    var searchUser = userDao.findByUsername(user.getUsername());
+  public ResponseEntity<Object> save(Category category) {
+    var searchCategory = categoryDao.findByCategoryName(category.getCategoryName());
     logMap = new HashMap<>();
 
-    if (searchUser.isPresent() && user.getIdUser() == null) {
+    if (searchCategory.isPresent() && category.getIdCategory() == null) {
       logMap.put("ERROR", true);
-      logMap.put("MESSAGE", "THIS TASK EXISTS");
+      logMap.put("ERROR", "THIS CATEGORY EXISTS");
       return new ResponseEntity<>(
           logMap,
           HttpStatus.CONFLICT
       );
     }
 
-    if (user.getIdUser() != null) {
+    if (category.getIdCategory() != null) {
       logMap.put("MESSAGE", "UPDATED");
     }
-
-    userDao.save(user);
-    logMap.put("DATA", user);
+    categoryDao.save(category);
+    logMap.put("DATA", category);
     logMap.put("MESSAGE", "SAVED");
     return new ResponseEntity<>(
         logMap,
@@ -52,20 +51,19 @@ public class UserServiceImplementation implements UserService {
   }
 
   @Override
-  @Transactional
-  public ResponseEntity<Object> delete(Long idUser) {
-    var userExisting = userDao.existsById(idUser);
+  public ResponseEntity<Object> delete(Long idCategory) {
+    var categoryExisting = categoryDao.existsById(idCategory);
     logMap = new HashMap<>();
-    if (!userExisting) {
+    if (!categoryExisting) {
       logMap.put("ERROR", true);
-      logMap.put("MESSAGE", "THIS USER DON'T EXISTS");
+      logMap.put("MESSAGE", "THIS CATEGORY NOT EXISTS");
       return new ResponseEntity<>(
           logMap,
           HttpStatus.NOT_FOUND
       );
     }
-    userDao.deleteById(idUser);
-    logMap.put("MESSAGE", "USER DELETED");
+    categoryDao.deleteById(idCategory);
+    logMap.put("MESSAGE", "CATEGORY DELETED");
     return new ResponseEntity<>(
         logMap,
         HttpStatus.ACCEPTED
@@ -73,8 +71,7 @@ public class UserServiceImplementation implements UserService {
   }
 
   @Override
-  @Transactional(readOnly = true)
-  public User findUser(User user) {
-    return userDao.findById(user.getIdUser()).orElse(null);
+  public Category findCategory(Long idCategory) {
+    return categoryDao.findById(idCategory).orElse(null);
   }
 }

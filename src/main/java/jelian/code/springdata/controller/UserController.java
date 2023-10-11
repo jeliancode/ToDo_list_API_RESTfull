@@ -3,7 +3,6 @@ package jelian.code.springdata.controller;
 import jakarta.validation.Valid;
 import jelian.code.springdata.domain.User;
 import jelian.code.springdata.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/users")
-@Slf4j
 public class UserController {
 
   @Autowired
@@ -49,5 +47,4 @@ public class UserController {
   public ResponseEntity<Object> deleteTask(@PathVariable("idUser") Long idUser) {
     return userService.delete(idUser);
   }
-
 }

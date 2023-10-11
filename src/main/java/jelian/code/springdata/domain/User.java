@@ -1,5 +1,6 @@
 package jelian.code.springdata.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,9 +21,11 @@ public class User implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idUser;
   @NotBlank
+  @Column(unique = true)
   private String username;
   @Email
   @NotBlank
+  @Column(unique = true)
   private String email;
   @Size(min =  8, max = 12)
   private String userPassword;
