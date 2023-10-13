@@ -27,25 +27,9 @@ public class CategoryController {
     return ResponseEntity.ok(categories);
   }
 
-  @PostMapping("/createCategory")
-  public ResponseEntity createCategory(@Valid @RequestBody Category category, Errors errors) {
-    if (errors.hasErrors()) {
-      return ResponseEntity.badRequest().build();
-    }
-    return categoryService.save(category);
-  }
-
-  @PostMapping("/editCategory/{idCategory}")
-  public ResponseEntity updateCategory(@PathVariable("idCategory") Long idCategory, @Valid @RequestBody Category updatedCategory, Errors errors){
-    if (errors.hasErrors()) {
-      return ResponseEntity.badRequest().build();
-    }
-    updatedCategory.setIdCategory(idCategory);
-    return categoryService.save(updatedCategory);
-  }
-
-  @DeleteMapping("/deleteCategory/{idCategory}")
-  public ResponseEntity<Object> deleteCategory(@PathVariable("idCategory") Long idCategory){
-    return categoryService.delete(idCategory);
+  @GetMapping("/getCategory/{idCategory}")
+  public ResponseEntity getCategory(@PathVariable("idCategory") Long idCategory) {
+    var category = categoryService.findCategory(idCategory);
+    return ResponseEntity.ok(category);
   }
 }
