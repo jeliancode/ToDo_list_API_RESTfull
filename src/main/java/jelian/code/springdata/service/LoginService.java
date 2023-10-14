@@ -16,17 +16,22 @@ public class LoginService {
     private final UserRepository userRepository;
 
     public Boolean validateLogin(LoginDto loginDto) {
-        return validateUserNameAndPassword(loginDto.getUsername(), loginDto.getPassword());
+        return validateUserNameAndPassword(loginDto);
     }
 
 
-    private Boolean validateUserNameAndPassword(String username, String password) {
+    private Boolean validateUserNameAndPassword(LoginDto loginDto) {
         Boolean response = Boolean.FALSE;
-        if (Objects.nonNull(username) && Objects.nonNull(password)) {
+        if (Objects.nonNull(loginDto.getUsername()) && Objects.nonNull(loginDto.getPassword())) {
             try {
-                User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(username, password, true);
-                log.info("success!!!");
-                response = Objects.nonNull(user.getIdUser());
+                User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(loginDto.getUsername(), loginDto.getPassword(), true);
+                if (loginDto.getRetryTimes() > 3) {
+                    user.setUserEnable(Boolean.FALSE);
+                    userRepository.save(user);
+                    response = Boolean.FALSE;
+                } else {
+                    response = Objects.nonNull(user.getIdUser());
+                }
             } catch (Exception e) {
                 log.info("fail!!!");
             }
