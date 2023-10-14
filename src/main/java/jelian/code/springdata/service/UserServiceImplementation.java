@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import jelian.code.springdata.dao.UserDao;
 import jelian.code.springdata.domain.User;
+import jelian.code.springdata.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class UserServiceImplementation implements UserService {
 
   @Autowired
   private UserDao userDao;
+  private UserRepository userRepository;
   private HashMap<String, Object> logMap;
 
   @Override
@@ -27,18 +29,19 @@ public class UserServiceImplementation implements UserService {
   @Transactional
   public ResponseEntity<Object> save(User user) {
     var searchUser = userDao.findByUsername(user.getUsername());
+    int uniqueCount = userRepository.checkNotUniqueUsername(user.getUsername());
     logMap = new HashMap<>();
 
-    if (searchUser.isPresent() && user.getIdUser() == null) {
+    if (searchUser.isPresent() && user.getIdUser() == null && uniqueCount > 0) {
       logMap.put("ERROR", true);
-      logMap.put("MESSAGE", "THIS TASK EXISTS");
+      logMap.put("MESSAGE", "THIS USER EXISTS");
       return new ResponseEntity<>(
           logMap,
           HttpStatus.CONFLICT
       );
     }
 
-    if (user.getIdUser() != null) {
+    if (user.getIdUser() != null && uniqueCount > 0) {
       logMap.put("MESSAGE", "UPDATED");
     }
 

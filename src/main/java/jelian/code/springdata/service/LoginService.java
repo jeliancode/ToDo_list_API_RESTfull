@@ -24,8 +24,10 @@ public class LoginService {
         Boolean response = Boolean.FALSE;
         if (Objects.nonNull(username) && Objects.nonNull(password)) {
             try {
+                /*insert checkIn storage procedure here*/
                 User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(username, password, true);
                 log.info("success!!!");
+
                 response = Objects.nonNull(user.getIdUser());
             } catch (Exception e) {
                 log.info("fail!!!");
@@ -34,5 +36,4 @@ public class LoginService {
 
         return response;
     }
-
 }
