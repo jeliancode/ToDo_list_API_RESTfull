@@ -29,6 +29,12 @@ public class ToDoListController {
     return ResponseEntity.ok(tasks);
   }
 
+  @GetMapping("/getTask/{idTask}")
+  public ResponseEntity getTask(@PathVariable("idTask") Long idTask) {
+    var category = taskService.findTask(idTask);
+    return ResponseEntity.ok(category);
+  }
+
   @PostMapping("/createTask")
   public ResponseEntity createTask(@Valid @RequestBody Task task, Errors errors) {
     if (errors.hasErrors()) {
