@@ -22,26 +22,28 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class LoginService {
+    private final UserRepository userRepository;
 
-  private final UserRepository userRepository;
-
-  public Boolean validateLogin(LoginDto loginDto) {
-    return validateUserNameAndPassword(loginDto);
-  }
+    public Boolean validateLogin(LoginDto loginDto) {
+        return validateUserNameAndPassword(loginDto);
+    }
 
 
-  private Boolean validateUserNameAndPassword(LoginDto loginDto) {
-    Boolean response = Boolean.FALSE;
-    if (Objects.nonNull(loginDto.getUsername()) && Objects.nonNull(loginDto.getPassword())) {
-      try {
-        User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(
-            loginDto.getUsername(), loginDto.getPassword(), true);
-        if (loginDto.getRetryTimes() > 3) {
-          user.setUserEnable(Boolean.FALSE);
-          userRepository.save(user);
-          response = Boolean.FALSE;
-        } else {
-          response = Objects.nonNull(user.getIdUser());
+    private Boolean validateUserNameAndPassword(LoginDto loginDto) {
+        Boolean response = Boolean.FALSE;
+        if (Objects.nonNull(loginDto.getUsername()) && Objects.nonNull(loginDto.getPassword())) {
+            try {
+                User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(loginDto.getUsername(), loginDto.getPassword(), true);
+                if (loginDto.getRetryTimes() > 3) {
+                    user.setUserEnable(Boolean.FALSE);
+                    userRepository.save(user);
+                    response = Boolean.FALSE;
+                } else {
+                    response = Objects.nonNull(user.getIdUser());
+                }
+            } catch (Exception e) {
+                log.info("fail!!!");
+            }
         }
       } catch (Exception e) {
         log.info("fail!!!");
