@@ -31,6 +31,7 @@ public class LoginService {
 
     private Boolean validateUserNameAndPassword(LoginDto loginDto) {
         Boolean response = Boolean.FALSE;
+        log.info("retry: " + loginDto.getRetryTimes());
         if (Objects.nonNull(loginDto.getUsername()) && Objects.nonNull(loginDto.getPassword())) {
             try {
                 User user = userRepository.findByUsernameAndUserPasswordAndUserEnable(loginDto.getUsername(), loginDto.getPassword(), true);
@@ -44,13 +45,10 @@ public class LoginService {
             } catch (Exception e) {
                 log.info("fail!!!");
             }
-        }
-      } catch (Exception e) {
-        log.info("fail!!!");
-      }
-    }
 
-    return response;
-  }
+        }
+
+        return response;
+    }
 
 }
