@@ -11,7 +11,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 @Data
 @Entity
 @Table(name = "user")
