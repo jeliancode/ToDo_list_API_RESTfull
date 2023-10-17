@@ -27,6 +27,12 @@ public class UserController {
     return ResponseEntity.ok(users);
   }
 
+  @GetMapping("/getUser/{idUser}")
+  public ResponseEntity getUser(@PathVariable("idUser") Long idUser) {
+    var category = userService.findUser(idUser);
+    return ResponseEntity.ok(category);
+  }
+
   @PostMapping("/createUser")
   public ResponseEntity createUser(@Valid @RequestBody User user, Errors errors) {
     if (errors.hasErrors()) {
@@ -34,8 +40,10 @@ public class UserController {
     }
     return userService.save(user);
   }
+
   @PostMapping("/editUser/{idUser}")
-  public ResponseEntity updateUser(@PathVariable("idUser") Long idUser, @Valid @RequestBody User updatedUser, Errors errors) {
+  public ResponseEntity updateUser(@PathVariable("idUser") Long idUser,
+      @Valid @RequestBody User updatedUser, Errors errors) {
     if (errors.hasErrors()) {
       return ResponseEntity.badRequest().build();
     }
